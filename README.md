@@ -6,13 +6,13 @@ Type describing generic asynchronous value.
 
 Async value can be in either of the following states:
 
-• `Uninitialized` - value has not been initialized yet
+• `Uninitialized` - the value has not been initialized yet
 
-• `Loading` - value is being loaded 
+• `Loading` - the value is being loaded 
 
 • `Success` - stores successfully loaded `value` 
 
-• `Fail` - failed to load value with `error`
+• `Fail` - failed to load the value with `error`
 
 ## Installation
 
@@ -27,6 +27,16 @@ Suggested installation methods:
 • Via [JitPack](https://jitpack.io/) plugin
 
 • Setup and distribute via [Local Maven repository](https://docs.gradle.org/current/userguide/declaring_repositories.html)
+
+## API Reference
+
+---
+
+In order to generate API Reference in `.html` format, run the following command:
+
+```shell
+$ ./gradlew dokkaHtml
+```
 
 ## Licensing
 
