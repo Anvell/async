@@ -118,7 +118,7 @@ internal class AsyncSpec: DescribeSpec({
     }
 })
 
-internal class SuccessTest: DescribeSpec({
+internal class SuccessSpec: DescribeSpec({
     lateinit var success: Success<String>
 
     beforeEach {
@@ -137,7 +137,7 @@ internal class SuccessTest: DescribeSpec({
     }
 })
 
-internal class FailTest: DescribeSpec({
+internal class FailSpec: DescribeSpec({
     lateinit var fail: Fail<String>
 
     beforeEach {
