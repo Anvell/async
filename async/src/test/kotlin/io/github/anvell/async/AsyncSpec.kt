@@ -5,7 +5,7 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.shouldBe
 
-internal class AsyncTest: DescribeSpec({
+internal class AsyncSpec: DescribeSpec({
     lateinit var async: Async<String>
 
     it("should have only four possible states") {
