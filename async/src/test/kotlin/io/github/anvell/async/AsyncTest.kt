@@ -4,7 +4,6 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.shouldBe
-import java.lang.NullPointerException
 
 internal class AsyncTest: DescribeSpec({
     lateinit var async: Async<String>
