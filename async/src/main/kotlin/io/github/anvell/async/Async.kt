@@ -23,14 +23,10 @@ object Uninitialized : Async<Nothing>()
 
 object Loading : Async<Nothing>()
 
-
 /**
  * Stores successfully loaded [value].
  */
-data class Success<out T>(
-    val value: T,
-    val metadata: Any? = null
-) : Async<T>() {
+data class Success<out T>(val value: T) : Async<T>() {
     private val consumed = AtomicBoolean(false)
 
     /**
@@ -57,10 +53,7 @@ data class Success<out T>(
 /**
  * Represents failure when loading the `value` and stores corresponding [error].
  */
-data class Fail<out T>(
-    private val throwable: Throwable,
-    val metadata: Any? = null
-) : Async<T>() {
+data class Fail<out T>(private val throwable: Throwable) : Async<T>() {
     private val consumed = AtomicBoolean(false)
 
     /**
