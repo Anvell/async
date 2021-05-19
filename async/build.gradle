@@ -1,7 +1,7 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion"
-    id 'java-library'
     id 'org.jetbrains.dokka' version "$kotlinVersion"
+    id 'java-library'
 }
 
 group = 'io.github.anvell'
@@ -37,8 +37,6 @@ test {
 }
 
 dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
-
     testImplementation 'io.kotest:kotest-runner-junit5:4.5.0'
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 }
