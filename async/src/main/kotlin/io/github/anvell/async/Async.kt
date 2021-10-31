@@ -49,7 +49,6 @@ data class Success<out T>(val value: T) : Async<T>() {
     fun peek() = value
 }
 
-
 /**
  * Represents failure when loading the `value` and stores corresponding [error].
  */
