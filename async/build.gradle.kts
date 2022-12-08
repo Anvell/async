@@ -14,10 +14,6 @@ tasks.jar {
     }
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
-
 dependencies {
-    testImplementation("io.kotest:kotest-runner-junit5:4.5.0")
+    testImplementation(libs.kotlin.test)
 }
