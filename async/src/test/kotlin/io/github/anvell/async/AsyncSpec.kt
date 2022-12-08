@@ -5,7 +5,7 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.shouldBe
 
-internal class AsyncSpec: DescribeSpec({
+internal class AsyncSpec : DescribeSpec({
     lateinit var async: Async<String>
 
     it("should have only four possible states") {
@@ -25,7 +25,7 @@ internal class AsyncSpec: DescribeSpec({
             }
 
             it("should not return any value") {
-                async() shouldBe null
+                async.value shouldBe null
             }
         }
 
@@ -35,7 +35,7 @@ internal class AsyncSpec: DescribeSpec({
             }
 
             it("should not return any value") {
-                async() shouldBe null
+                async.value shouldBe null
             }
         }
 
@@ -45,12 +45,7 @@ internal class AsyncSpec: DescribeSpec({
             }
 
             it("should return actual value") {
-                async() shouldBe "FooBar"
-            }
-
-            it("should consume value") {
-                async()
-                (async as Success).isConsumed shouldBe true
+                async.value shouldBe "FooBar"
             }
         }
 
@@ -60,12 +55,7 @@ internal class AsyncSpec: DescribeSpec({
             }
 
             it("should not return any value") {
-                async() shouldBe null
-            }
-
-            it("should not consume error") {
-                async()
-                (async as Fail).isConsumed shouldBe false
+                async.value shouldBe null
             }
         }
     }
@@ -99,11 +89,6 @@ internal class AsyncSpec: DescribeSpec({
             it("should return actual value") {
                 async.unwrap() shouldBe "FooBar"
             }
-
-            it("should consume value") {
-                async.unwrap()
-                (async as Success).isConsumed shouldBe true
-            }
         }
 
         context("when loading value has failed") {
@@ -118,26 +103,7 @@ internal class AsyncSpec: DescribeSpec({
     }
 })
 
-internal class SuccessSpec: DescribeSpec({
-    lateinit var success: Success<String>
-
-    beforeEach {
-        success = Success("FooBar")
-    }
-
-    describe("peeking a value") {
-        it("should return actual value") {
-            success.peek() shouldBe "FooBar"
-        }
-
-        it("should not consume value") {
-            success.peek()
-            success.isConsumed shouldBe false
-        }
-    }
-})
-
-internal class FailSpec: DescribeSpec({
+internal class FailSpec : DescribeSpec({
     lateinit var fail: Fail<String>
 
     beforeEach {
@@ -147,22 +113,6 @@ internal class FailSpec: DescribeSpec({
     describe("obtaining an error") {
         it("should return actual error") {
             fail.error shouldBe NullPointerException()
-        }
-
-        it("should consume error") {
-            fail.error
-            fail.isConsumed shouldBe true
-        }
-    }
-
-    describe("peeking an error") {
-        it("should return actual error") {
-            fail.peekError() shouldBe NullPointerException()
-        }
-
-        it("should not consume error") {
-            fail.peekError()
-            fail.isConsumed shouldBe false
         }
     }
 })
