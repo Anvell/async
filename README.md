@@ -35,7 +35,7 @@ Suggested installation methods:
 In order to generate API Reference in `.html` format, run the following command:
 
 ```shell
-$ ./gradlew dokkaHtml
+$ ./gradlew dokkaHtmlMultiModule
 ```
 
 ## Licensing
