@@ -1,6 +1,5 @@
 # Async
-
----
+![Build & Test](https://github.com/anvell/async/actions/workflows/check.yml/badge.svg) [![](https://jitpack.io/v/anvell/async.svg)](https://jitpack.io/#anvell/async)
 
 Type describing generic asynchronous value.
 
@@ -16,21 +15,23 @@ Async value can be in either of the following states:
 
 ## Installation
 
----
+Library is published on jitpack.io. Add repository it to your ```build.gradle``` script:
+```gradle
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+and:
 
-Gradle is the only supported build configuration.
-
-`Async` has not yet been published to any public repository.
-
-Suggested installation methods:
-
-• Via [JitPack](https://jitpack.io/) plugin
-
-• Setup and distribute via [Local Maven repository](https://docs.gradle.org/current/userguide/declaring_repositories.html)
+```gradle
+dependencies {
+    implementation 'com.github.anvell:async:0.2.1'
+}
+```
 
 ## API Reference
-
----
 
 In order to generate API Reference in `.html` format, run the following command:
 
@@ -39,7 +40,5 @@ $ ./gradlew dokkaHtmlMultiModule
 ```
 
 ## Licensing
-
----
 
 Project is available under [MIT](https://github.com/Anvell/async/blob/master/LICENSE.txt) License.
