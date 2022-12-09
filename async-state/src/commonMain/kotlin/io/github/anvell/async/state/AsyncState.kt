@@ -5,8 +5,6 @@ import io.github.anvell.async.Fail
 import io.github.anvell.async.Loading
 import io.github.anvell.async.Success
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlin.reflect.KProperty1
@@ -14,7 +12,7 @@ import kotlin.reflect.KProperty1
 interface AsyncState<S> {
     val stateFlow: MutableStateFlow<S>
 
-    fun <T> withState(block: (S) -> T) = block(stateFlow.value)
+    fun <V> withState(block: (S) -> V) = block(stateFlow.value)
 
     fun setState(reducer: S.() -> S) {
         stateFlow.value = reducer(stateFlow.value)
@@ -30,16 +28,15 @@ interface AsyncState<S> {
             .collect(block)
     }
 
-    fun <V> CoroutineScope.collectReduceAsState(
-        flow: Flow<Result<V>>,
+    fun <V> Flow<Result<V>>.collectReduceAsState(
+        scope: CoroutineScope,
         initialState: Async<V>? = Loading,
         reducer: S.(Async<V>) -> S
-    ) = launch {
+    ) = scope.launch {
         if (initialState != null) {
             setState { reducer(initialState) }
         }
-        flow
-            .catch { setState { reducer(Fail(it)) } }
+        catch { setState { reducer(Fail(it)) } }
             .collect {
                 it.fold(
                     onFailure = { setState { reducer(Fail(it)) } },
@@ -48,64 +45,47 @@ interface AsyncState<S> {
             }
     }
 
-    fun <V> CoroutineScope.collectAsState(
-        flow: Flow<V>,
+    fun <V> Flow<V>.collectAsState(
+        scope: CoroutineScope,
         initialState: Async<V>? = Loading,
         reducer: S.(Async<V>) -> S
-    ) = launch {
+    ) = scope.launch {
         if (initialState != null) {
             setState { reducer(initialState) }
         }
-        flow
-            .catch { setState { reducer(Fail(it)) } }
+        catch { setState { reducer(Fail(it)) } }
             .collect { setState { reducer(Success(it)) } }
     }
 
-    fun <V> CoroutineScope.reduceAsState(
-        value: suspend () -> Result<V>,
+    fun <V> ScopedDeferred<Result<V>>.reduceAsState(
         initialState: Async<V>? = Loading,
         reducer: S.(Async<V>) -> S
-    ) = launch {
-        if (initialState != null) {
-            setState { reducer(initialState) }
-        }
-        value().fold(
-            onFailure = { setState { reducer(Fail(it)) } },
-            onSuccess = { setState { reducer(Success(it)) } }
-        )
-    }
-
-    fun <V> CoroutineScope.catchAsState(
-        value: suspend () -> V,
-        initialState: Async<V>? = Loading,
-        reducer: S.(Async<V>) -> S
-    ) = launch {
-        if (initialState != null) {
-            setState { reducer(initialState) }
-        }
-        try {
-            val result = value()
-            setState { reducer(Success(result)) }
-        } catch (error: Throwable) {
-            setState { reducer(Fail(error)) }
+    ) = let { (scope, value) ->
+        scope.launch {
+            if (initialState != null) {
+                setState { reducer(initialState) }
+            }
+            value.await().fold(
+                onFailure = { setState { reducer(Fail(it)) } },
+                onSuccess = { setState { reducer(Success(it)) } }
+            )
         }
     }
 
-    fun <V> CoroutineScope.catchAllAsState(
-        values: List<suspend () -> V>,
-        initialState: Async<List<V>>? = Loading,
-        reducer: S.(Async<List<V>>) -> S
-    ) = launch {
-        if (initialState != null) {
-            setState { reducer(initialState) }
-        }
-        try {
-            val result = values
-                .map { async { it() } }
-                .awaitAll()
-            setState { reducer(Success(result)) }
-        } catch (error: Throwable) {
-            setState { reducer(Fail(error)) }
+    fun <V> ScopedDeferred<V>.catchAsState(
+        initialState: Async<V>? = Loading,
+        reducer: S.(Async<V>) -> S
+    ) = let { (scope, value) ->
+        scope.launch {
+            if (initialState != null) {
+                setState { reducer(initialState) }
+            }
+            try {
+                val result = value.await()
+                setState { reducer(Success(result)) }
+            } catch (error: Throwable) {
+                setState { reducer(Fail(error)) }
+            }
         }
     }
 }
