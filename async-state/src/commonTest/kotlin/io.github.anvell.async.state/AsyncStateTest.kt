@@ -116,7 +116,7 @@ class AsyncStateTest : AsyncState<MockData> by AsyncStateFlow(MockData()) {
     fun reducingSuccessValueAsState() = runTest {
         val received = mutableListOf<Async<String>>()
         val selectSubscribe = selectSubscribe(MockData::text, received::add)
-        val asyncScoped = asyncScoped {
+        val asyncScoped = asyncWithScope {
             delay(1)
             Result.success("some text")
         }.reduceAsState { copy(text = it) }
@@ -137,7 +137,7 @@ class AsyncStateTest : AsyncState<MockData> by AsyncStateFlow(MockData()) {
     fun reducingErrorValueAsState() = runTest {
         val received = mutableListOf<Async<String>>()
         val selectSubscribe = selectSubscribe(MockData::text, received::add)
-        val asyncScoped = asyncScoped<Result<String>> {
+        val asyncScoped = asyncWithScope<Result<String>> {
             delay(1)
             Result.failure(MockException)
         }.reduceAsState { copy(text = it) }
@@ -158,7 +158,7 @@ class AsyncStateTest : AsyncState<MockData> by AsyncStateFlow(MockData()) {
     fun catchingValueAsState() = runTest {
         val received = mutableListOf<Async<String>>()
         val selectSubscribe = selectSubscribe(MockData::text, received::add)
-        val asyncScoped = asyncScoped {
+        val asyncScoped = asyncWithScope {
             delay(1)
             "some text"
         }.catchAsState { copy(text = it) }
@@ -179,7 +179,7 @@ class AsyncStateTest : AsyncState<MockData> by AsyncStateFlow(MockData()) {
     fun catchingErrorAsState() = runTest {
         val received = mutableListOf<Async<String>>()
         val selectSubscribe = selectSubscribe(MockData::text, received::add)
-        val asyncScoped = asyncScoped(SupervisorJob()) {
+        val asyncScoped = asyncWithScope(SupervisorJob()) {
             delay(1)
             throw MockException
         }.catchAsState { copy(text = it) }
