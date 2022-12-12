@@ -6,6 +6,11 @@ import kotlinx.coroutines.flow.*
 import kotlin.reflect.KProperty1
 
 interface AsyncState<S> {
+
+    class Delegate<S>(initialState: S) : AsyncState<S> {
+        override val stateFlow = MutableStateFlow(initialState)
+    }
+
     val stateFlow: MutableStateFlow<S>
 
     fun <V> withState(block: (S) -> V) = block(stateFlow.value)

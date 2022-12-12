@@ -11,7 +11,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class AsyncStateTest : AsyncState<MockData> by AsyncStateFlow(MockData()) {
+class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
 
     @BeforeTest
     fun setUp() {
