@@ -33,7 +33,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(project(":async"))
+                api(project(":async"))
 
                 implementation(libs.coroutines.core)
             }
