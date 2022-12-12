@@ -1,12 +1,8 @@
 package io.github.anvell.async.state
 
-import io.github.anvell.async.Async
-import io.github.anvell.async.Fail
-import io.github.anvell.async.Loading
-import io.github.anvell.async.Success
-import kotlinx.coroutines.CoroutineScope
+import io.github.anvell.async.*
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import kotlin.reflect.KProperty1
 
 interface AsyncState<S> {
