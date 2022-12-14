@@ -7,10 +7,8 @@ plugins {
 }
 
 kotlin {
-    jvm {
-        withJava()
-    }
-    js(BOTH) {
+    jvm()
+    js(IR) {
         browser {
             testTask {
                 testLogging.showStandardStreams = true
