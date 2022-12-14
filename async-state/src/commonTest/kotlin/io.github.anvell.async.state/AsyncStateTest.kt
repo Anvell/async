@@ -4,6 +4,7 @@ import io.github.anvell.async.*
 import io.github.anvell.async.state.mock.MockData
 import io.github.anvell.async.state.mock.MockException
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest
@@ -108,6 +109,36 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
                 Success("foo"),
                 Fail(MockException),
                 Success("bar")
+            )
+        )
+    }
+
+    @Test
+    fun collectFlowWithProgressAsState() = runTest {
+        val flow: Flow<Async<String>> = flow {
+            delay(1)
+            emit(Loading(0.3f))
+            delay(1)
+            emit(Loading(0.6f))
+            delay(1)
+            emit(Success("foo"))
+        }
+
+        val received = mutableListOf<Async<String>>()
+        val selectSubscribe = selectSubscribe(MockData::text, received::add)
+        val collectAsState = launch {
+            flow.collect { setState { copy(text = it) } }
+        }
+        collectAsState.join()
+        selectSubscribe.cancel()
+
+        assertEquals(
+            expected = received,
+            actual = listOf(
+                Uninitialized,
+                Loading(progress = 0.3f),
+                Loading(progress = 0.6f),
+                Success("foo")
             )
         )
     }
