@@ -46,7 +46,7 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
             expected = received,
             actual = listOf(
                 Uninitialized,
-                Loading,
+                Loading(),
                 Success("foo"),
                 Success("bar")
             )
@@ -72,7 +72,7 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
             expected = received,
             actual = listOf(
                 Uninitialized,
-                Loading,
+                Loading(),
                 Success("foo"),
                 Fail(MockException)
             )
@@ -127,7 +127,7 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
             expected = received,
             actual = listOf(
                 Uninitialized,
-                Loading,
+                Loading(),
                 Success("some text")
             )
         )
@@ -148,7 +148,7 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
             expected = received,
             actual = listOf(
                 Uninitialized,
-                Loading,
+                Loading(),
                 Fail(MockException)
             )
         )
@@ -169,7 +169,7 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
             expected = received,
             actual = listOf(
                 Uninitialized,
-                Loading,
+                Loading(),
                 Success("some text")
             )
         )
@@ -190,7 +190,7 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
             expected = received,
             actual = listOf(
                 Uninitialized,
-                Loading,
+                Loading(),
                 Fail(MockException)
             )
         )

@@ -31,9 +31,12 @@ sealed class Async<out T> {
 object Uninitialized : Async<Nothing>()
 
 /**
- * Represents loading state.
+ * Represents loading state with optional progress rate.
  */
-object Loading : Async<Nothing>()
+data class Loading(
+    /*@FloatRange(from = 0.0, to = 1.0)*/
+    val progress: Float? = null
+) : Async<Nothing>()
 
 /**
  * Stores successfully loaded [value].

@@ -37,7 +37,7 @@ class AsyncTest {
 
     class LoadingState {
 
-        private val loading = Loading
+        private val loading = Loading(progress = .5f)
 
         @Test
         fun value() {

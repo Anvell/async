@@ -52,7 +52,7 @@ interface AsyncState<S> {
      */
     fun <V> Flow<Result<V>>.collectReduceAsState(
         scope: CoroutineScope,
-        initialState: Async<V>? = Loading,
+        initialState: Async<V>? = Loading(),
         reducer: S.(Async<V>) -> S
     ) = scope.launch {
         if (initialState != null) {
@@ -72,7 +72,7 @@ interface AsyncState<S> {
      */
     fun <V> Flow<V>.collectAsState(
         scope: CoroutineScope,
-        initialState: Async<V>? = Loading,
+        initialState: Async<V>? = Loading(),
         reducer: S.(Async<V>) -> S
     ) = scope.launch {
         if (initialState != null) {
@@ -86,7 +86,7 @@ interface AsyncState<S> {
      * Await [result][Result] and update state with [reducer].
      */
     fun <V> ScopedDeferred<Result<V>>.reduceAsState(
-        initialState: Async<V>? = Loading,
+        initialState: Async<V>? = Loading(),
         reducer: S.(Async<V>) -> S
     ) = let { (scope, value) ->
         scope.launch {
@@ -104,7 +104,7 @@ interface AsyncState<S> {
      * Await value and update state with [reducer].
      */
     fun <V> ScopedDeferred<V>.catchAsState(
-        initialState: Async<V>? = Loading,
+        initialState: Async<V>? = Loading(),
         reducer: S.(Async<V>) -> S
     ) = let { (scope, value) ->
         scope.launch {
