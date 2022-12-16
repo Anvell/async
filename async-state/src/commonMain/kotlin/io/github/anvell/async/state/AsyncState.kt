@@ -1,8 +1,12 @@
 package io.github.anvell.async.state
 
-import io.github.anvell.async.*
-import kotlinx.coroutines.*
+import io.github.anvell.async.Async
+import io.github.anvell.async.Fail
+import io.github.anvell.async.Loading
+import io.github.anvell.async.Success
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import kotlin.reflect.KProperty1
 
 /**
@@ -48,7 +52,22 @@ interface AsyncState<S> {
     }
 
     /**
-     * Collect flow and update state with [reducer].
+     * Collect flow of values wrapped in `Async` and update state with [reducer].
+     */
+    fun <V> Flow<Async<V>>.collectAsyncAsState(
+        scope: CoroutineScope,
+        initialState: Async<V>? = Loading(),
+        reducer: S.(Async<V>) -> S
+    ) = scope.launch {
+        if (initialState != null) {
+            setState { reducer(initialState) }
+        }
+        catch { setState { reducer(Fail(it)) } }
+            .collect { setState { reducer(it) } }
+    }
+
+    /**
+     * Collect flow of values wrapped in `Result` and update state with [reducer].
      */
     fun <V> Flow<Result<V>>.collectReduceAsState(
         scope: CoroutineScope,
@@ -68,7 +87,7 @@ interface AsyncState<S> {
     }
 
     /**
-     * Collect flow and update state with [reducer].
+     * Collect flow of values and update state with [reducer].
      */
     fun <V> Flow<V>.collectAsState(
         scope: CoroutineScope,

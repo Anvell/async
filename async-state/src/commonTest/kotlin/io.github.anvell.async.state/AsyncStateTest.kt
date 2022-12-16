@@ -93,19 +93,15 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
 
         val received = mutableListOf<Async<String>>()
         val selectSubscribe = selectSubscribe(MockData::text, received::add)
-        val collectAsState = flow
-            .collectReduceAsState(
-                scope = this,
-                initialState = Success("initial state")
-            ) { copy(text = it) }
-        collectAsState.join()
+        val collectReduceAsState = flow.collectReduceAsState(this) { copy(text = it) }
+        collectReduceAsState.join()
         selectSubscribe.cancel()
 
         assertEquals(
             expected = received,
             actual = listOf(
                 Uninitialized,
-                Success("initial state"),
+                Loading(),
                 Success("foo"),
                 Fail(MockException),
                 Success("bar")
@@ -126,16 +122,19 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
 
         val received = mutableListOf<Async<String>>()
         val selectSubscribe = selectSubscribe(MockData::text, received::add)
-        val collectAsState = launch {
-            flow.collect { setState { copy(text = it) } }
-        }
-        collectAsState.join()
+        val collectAsyncAsState = flow
+            .collectAsyncAsState(
+                initialState = Loading(0f),
+                scope = this
+            ) { copy(text = it) }
+        collectAsyncAsState.join()
         selectSubscribe.cancel()
 
         assertEquals(
             expected = received,
             actual = listOf(
                 Uninitialized,
+                Loading(progress = 0f),
                 Loading(progress = 0.3f),
                 Loading(progress = 0.6f),
                 Success("foo")
