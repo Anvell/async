@@ -23,10 +23,6 @@ allprojects {
     group = "io.github.anvell"
     version = "1.1.0"
 
-    tasks.withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "11"
-    }
-
     kotlinter {
         disabledRules = arrayOf("no-wildcard-imports")
     }
