@@ -29,7 +29,9 @@ interface AsyncState<S> {
     /**
      * Provide current state in [block]
      */
-    fun <V> withState(block: (S) -> V) = block(stateFlow.value)
+    fun <V> withState(block: (state: S) -> V) {
+        block(stateFlow.value)
+    }
 
     /**
      * Update current state with [reducer].
