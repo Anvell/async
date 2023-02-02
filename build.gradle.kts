@@ -21,7 +21,7 @@ allprojects {
     }
 
     group = "io.github.anvell"
-    version = "1.1.1"
+    version = "1.1.2"
 
     kotlinter {
         disabledRules = arrayOf("no-wildcard-imports")
