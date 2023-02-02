@@ -21,9 +21,13 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
 
     @Test
     fun changeStateDirectly() {
-        assertEquals(withState(MockData::text), Uninitialized)
+        withState { state ->
+            assertEquals(state.text, Uninitialized)
+        }
         setState { copy(text = Success("some text")) }
-        assertEquals(withState(MockData::text), Success("some text"))
+        withState { state ->
+            assertEquals(state.text, Success("some text"))
+        }
     }
 
     @Test
