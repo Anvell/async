@@ -18,6 +18,7 @@ allprojects {
 
     repositories {
         mavenCentral()
+        maven("https://jitpack.io")
     }
 
     group = "io.github.anvell"
