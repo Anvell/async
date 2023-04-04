@@ -4,5 +4,5 @@ import io.github.anvell.async.Async
 import io.github.anvell.async.Uninitialized
 
 data class MockData(
-    val text: Async<String> = Uninitialized
+    val text: Async<String> = Uninitialized,
 )

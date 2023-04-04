@@ -1,9 +1,15 @@
 package io.github.anvell.async.state
 
-import io.github.anvell.async.*
+import io.github.anvell.async.Async
+import io.github.anvell.async.Fail
+import io.github.anvell.async.Loading
+import io.github.anvell.async.Success
+import io.github.anvell.async.Uninitialized
 import io.github.anvell.async.state.mock.MockData
 import io.github.anvell.async.state.mock.MockException
-import kotlinx.coroutines.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
@@ -53,8 +59,8 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
                 Uninitialized,
                 Loading(),
                 Success("foo"),
-                Success("bar")
-            )
+                Success("bar"),
+            ),
         )
     }
 
@@ -79,8 +85,8 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
                 Uninitialized,
                 Loading(),
                 Success("foo"),
-                Fail(MockException)
-            )
+                Fail(MockException),
+            ),
         )
     }
 
@@ -108,8 +114,8 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
                 Loading(),
                 Success("foo"),
                 Fail(MockException),
-                Success("bar")
-            )
+                Success("bar"),
+            ),
         )
     }
 
@@ -129,7 +135,7 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
         val collectAsyncAsState = flow
             .collectAsyncAsState(
                 initialState = Loading(0f),
-                scope = this
+                scope = this,
             ) { copy(text = it) }
         collectAsyncAsState.join()
         selectSubscribe.cancel()
@@ -141,8 +147,8 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
                 Loading(progress = 0f),
                 Loading(progress = 0.3f),
                 Loading(progress = 0.6f),
-                Success("foo")
-            )
+                Success("foo"),
+            ),
         )
     }
 
@@ -162,8 +168,8 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
             actual = listOf(
                 Uninitialized,
                 Loading(),
-                Success("some text")
-            )
+                Success("some text"),
+            ),
         )
     }
 
@@ -183,8 +189,8 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
             actual = listOf(
                 Uninitialized,
                 Loading(),
-                Fail(MockException)
-            )
+                Fail(MockException),
+            ),
         )
     }
 
@@ -204,8 +210,8 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
             actual = listOf(
                 Uninitialized,
                 Loading(),
-                Success("some text")
-            )
+                Success("some text"),
+            ),
         )
     }
 
@@ -225,8 +231,8 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
             actual = listOf(
                 Uninitialized,
                 Loading(),
-                Fail(MockException)
-            )
+                Fail(MockException),
+            ),
         )
     }
 }

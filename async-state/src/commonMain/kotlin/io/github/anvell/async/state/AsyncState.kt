@@ -5,7 +5,11 @@ import io.github.anvell.async.Fail
 import io.github.anvell.async.Loading
 import io.github.anvell.async.Success
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlin.reflect.KProperty1
 
@@ -43,7 +47,7 @@ interface AsyncState<S> {
      */
     fun <P> CoroutineScope.selectSubscribe(
         property: KProperty1<S, P>,
-        block: (P) -> Unit
+        block: (P) -> Unit,
     ) = launch {
         stateFlow
             .map(property::get)
@@ -57,7 +61,7 @@ interface AsyncState<S> {
     fun <V> Flow<Async<V>>.collectAsyncAsState(
         scope: CoroutineScope,
         initialState: Async<V>? = Loading(),
-        reducer: S.(Async<V>) -> S
+        reducer: S.(Async<V>) -> S,
     ) = scope.launch {
         if (initialState != null) {
             setState { reducer(initialState) }
@@ -72,7 +76,7 @@ interface AsyncState<S> {
     fun <V> Flow<Result<V>>.collectReduceAsState(
         scope: CoroutineScope,
         initialState: Async<V>? = Loading(),
-        reducer: S.(Async<V>) -> S
+        reducer: S.(Async<V>) -> S,
     ) = scope.launch {
         if (initialState != null) {
             setState { reducer(initialState) }
@@ -81,7 +85,7 @@ interface AsyncState<S> {
             .collect {
                 it.fold(
                     onFailure = { setState { reducer(Fail(it)) } },
-                    onSuccess = { setState { reducer(Success(it)) } }
+                    onSuccess = { setState { reducer(Success(it)) } },
                 )
             }
     }
@@ -92,7 +96,7 @@ interface AsyncState<S> {
     fun <V> Flow<V>.collectAsState(
         scope: CoroutineScope,
         initialState: Async<V>? = Loading(),
-        reducer: S.(Async<V>) -> S
+        reducer: S.(Async<V>) -> S,
     ) = scope.launch {
         if (initialState != null) {
             setState { reducer(initialState) }
@@ -106,7 +110,7 @@ interface AsyncState<S> {
      */
     fun <V> ScopedDeferred<Result<V>>.reduceAsState(
         initialState: Async<V>? = Loading(),
-        reducer: S.(Async<V>) -> S
+        reducer: S.(Async<V>) -> S,
     ) = let { (scope, value) ->
         scope.launch {
             if (initialState != null) {
@@ -114,7 +118,7 @@ interface AsyncState<S> {
             }
             value.await().fold(
                 onFailure = { setState { reducer(Fail(it)) } },
-                onSuccess = { setState { reducer(Success(it)) } }
+                onSuccess = { setState { reducer(Success(it)) } },
             )
         }
     }
@@ -124,7 +128,7 @@ interface AsyncState<S> {
      */
     fun <V> ScopedDeferred<V>.catchAsState(
         initialState: Async<V>? = Loading(),
-        reducer: S.(Async<V>) -> S
+        reducer: S.(Async<V>) -> S,
     ) = let { (scope, value) ->
         scope.launch {
             if (initialState != null) {

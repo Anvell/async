@@ -35,7 +35,7 @@ object Uninitialized : Async<Nothing>()
  */
 data class Loading(
     /*@FloatRange(from = 0.0, to = 1.0)*/
-    val progress: Float? = null
+    val progress: Float? = null,
 ) : Async<Nothing>()
 
 /**
