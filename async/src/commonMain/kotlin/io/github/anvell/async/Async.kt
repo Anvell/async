@@ -5,12 +5,12 @@ package io.github.anvell.async
  *
  * @param T The type of the [value].
  */
-sealed class Async<out T> {
+public sealed class Async<out T> {
 
     /**
      * By default, [value] is set to `null`.
      */
-    open val value: T? get() = null
+    public open val value: T? get() = null
 
     /**
      * Unwraps the [value] if present, throws an [IllegalArgumentException] otherwise.
@@ -18,7 +18,7 @@ sealed class Async<out T> {
      * @param message optional custom error message.
      * @return not optional [value]
      */
-    fun unwrap(message: String? = null): T = if (message != null) {
+    public fun unwrap(message: String? = null): T = if (message != null) {
         requireNotNull(value) { message }
     } else {
         requireNotNull(value)
@@ -28,12 +28,12 @@ sealed class Async<out T> {
 /**
  * Represents uninitialized state.
  */
-object Uninitialized : Async<Nothing>()
+public object Uninitialized : Async<Nothing>()
 
 /**
  * Represents loading state with optional progress rate.
  */
-data class Loading(
+public data class Loading(
     /*@FloatRange(from = 0.0, to = 1.0)*/
     val progress: Float? = null
 ) : Async<Nothing>()
@@ -41,9 +41,9 @@ data class Loading(
 /**
  * Stores successfully loaded [value].
  */
-data class Success<out T>(override val value: T) : Async<T>()
+public data class Success<out T>(override val value: T) : Async<T>()
 
 /**
  * Represents failure when loading the [value] and stores corresponding [error].
  */
-data class Fail<out T>(val error: Throwable) : Async<T>()
+public data class Fail<out T>(val error: Throwable) : Async<T>()

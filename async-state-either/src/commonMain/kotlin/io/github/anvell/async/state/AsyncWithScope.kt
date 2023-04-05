@@ -2,6 +2,7 @@ package io.github.anvell.async.state
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
@@ -11,8 +12,8 @@ import kotlin.coroutines.EmptyCoroutineContext
  *
  * @see [async]
  */
-fun <T> CoroutineScope.asyncWithScope(
+public fun <T> CoroutineScope.asyncWithScope(
     context: CoroutineContext = EmptyCoroutineContext,
     start: CoroutineStart = CoroutineStart.DEFAULT,
     block: suspend CoroutineScope.() -> T
-) = this to async(context, start, block)
+): Pair<CoroutineScope, Deferred<T>> = this to async(context, start, block)
