@@ -22,7 +22,7 @@ allprojects {
     }
 
     group = "io.github.anvell"
-    version = "1.1.2"
+    version = "1.2.0"
 }
 
 tasks.withType<DependencyUpdatesTask> {
