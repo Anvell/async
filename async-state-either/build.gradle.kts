@@ -11,7 +11,6 @@ kotlin {
     js(IR) {
         browser()
     }
-
     iosArm32()
     iosArm64()
     iosX64()
@@ -27,7 +26,7 @@ kotlin {
     watchosX64()
 
     sourceSets {
-        val commonMain by getting {
+        getByName("commonMain") {
             dependencies {
                 api(project(":async"))
 
@@ -35,7 +34,7 @@ kotlin {
                 implementation(libs.either)
             }
         }
-        val commonTest by getting {
+        getByName("commonTest") {
             dependencies {
                 implementation(libs.kotlin.test)
                 implementation(libs.coroutines.test)

@@ -11,26 +11,22 @@ kotlin {
     js(IR) {
         browser()
     }
-
     iosArm32()
     iosArm64()
     iosX64()
-    iosSimulatorArm64()
     linuxX64()
     macosX64()
     macosArm64()
     mingwX64()
     tvosArm64()
     tvosX64()
-    tvosSimulatorArm64()
     watchosArm32()
     watchosArm64()
     watchosX86()
     watchosX64()
-    watchosSimulatorArm64()
 
     sourceSets {
-        val commonTest by getting {
+        getByName("commonTest") {
             dependencies {
                 implementation(libs.kotlin.test)
             }
