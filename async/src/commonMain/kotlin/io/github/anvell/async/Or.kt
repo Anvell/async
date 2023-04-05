@@ -1,7 +1,7 @@
 package io.github.anvell.async
 
 inline fun <T> Async<T>.or(
-    transform: (error: Throwable) -> Async<T>,
+    transform: (error: Throwable) -> Async<T>
 ): Async<T> = when (this) {
     is Uninitialized -> Uninitialized
     is Loading -> Loading(progress)

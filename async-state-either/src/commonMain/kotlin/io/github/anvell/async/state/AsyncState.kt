@@ -49,7 +49,7 @@ interface AsyncState<S> {
      */
     fun <P> CoroutineScope.selectSubscribe(
         property: KProperty1<S, P>,
-        block: (P) -> Unit,
+        block: (P) -> Unit
     ) = launch {
         stateFlow
             .map(property::get)
@@ -63,7 +63,7 @@ interface AsyncState<S> {
     fun <V> Flow<Async<V>>.collectAsyncAsState(
         scope: CoroutineScope,
         initialState: Async<V>? = Loading(),
-        reducer: S.(Async<V>) -> S,
+        reducer: S.(Async<V>) -> S
     ) = scope.launch {
         if (initialState != null) {
             setState { reducer(initialState) }
@@ -78,7 +78,7 @@ interface AsyncState<S> {
     fun <L, R> Flow<Either<L, R>>.collectReduceAsState(
         scope: CoroutineScope,
         initialState: Async<R>? = Loading(),
-        reducer: S.(Async<R>) -> S,
+        reducer: S.(Async<R>) -> S
     ) where L : Throwable = scope.launch {
         if (initialState != null) {
             setState { reducer(initialState) }
@@ -87,7 +87,7 @@ interface AsyncState<S> {
             .collect {
                 it.fold(
                     left = { setState { reducer(Fail(it)) } },
-                    right = { setState { reducer(Success(it)) } },
+                    right = { setState { reducer(Success(it)) } }
                 )
             }
     }
@@ -98,7 +98,7 @@ interface AsyncState<S> {
     fun <V> Flow<V>.collectAsState(
         scope: CoroutineScope,
         initialState: Async<V>? = Loading(),
-        reducer: S.(Async<V>) -> S,
+        reducer: S.(Async<V>) -> S
     ) = scope.launch {
         if (initialState != null) {
             setState { reducer(initialState) }
@@ -112,7 +112,7 @@ interface AsyncState<S> {
      */
     fun <L, R> ScopedDeferred<Either<L, R>>.reduceAsState(
         initialState: Async<R>? = Loading(),
-        reducer: S.(Async<R>) -> S,
+        reducer: S.(Async<R>) -> S
     ) where L : Throwable = let { (scope, value) ->
         scope.launch {
             if (initialState != null) {
@@ -120,7 +120,7 @@ interface AsyncState<S> {
             }
             value.await().fold(
                 left = { setState { reducer(Fail(it)) } },
-                right = { setState { reducer(Success(it)) } },
+                right = { setState { reducer(Success(it)) } }
             )
         }
     }
@@ -130,7 +130,7 @@ interface AsyncState<S> {
      */
     fun <V> ScopedDeferred<V>.catchAsState(
         initialState: Async<V>? = Loading(),
-        reducer: S.(Async<V>) -> S,
+        reducer: S.(Async<V>) -> S
     ) = let { (scope, value) ->
         scope.launch {
             if (initialState != null) {

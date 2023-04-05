@@ -62,8 +62,8 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
                 Uninitialized,
                 Loading(),
                 Success("foo"),
-                Success("bar"),
-            ),
+                Success("bar")
+            )
         )
     }
 
@@ -88,8 +88,8 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
                 Uninitialized,
                 Loading(),
                 Success("foo"),
-                Fail(MockException),
-            ),
+                Fail(MockException)
+            )
         )
     }
 
@@ -117,8 +117,8 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
                 Loading(),
                 Success("foo"),
                 Fail(MockException),
-                Success("bar"),
-            ),
+                Success("bar")
+            )
         )
     }
 
@@ -138,7 +138,7 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
         val collectAsyncAsState = flow
             .collectAsyncAsState(
                 initialState = Loading(0f),
-                scope = this,
+                scope = this
             ) { copy(text = it) }
         collectAsyncAsState.join()
         selectSubscribe.cancel()
@@ -150,8 +150,8 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
                 Loading(progress = 0f),
                 Loading(progress = 0.3f),
                 Loading(progress = 0.6f),
-                Success("foo"),
-            ),
+                Success("foo")
+            )
         )
     }
 
@@ -171,8 +171,8 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
             actual = listOf(
                 Uninitialized,
                 Loading(),
-                Success("some text"),
-            ),
+                Success("some text")
+            )
         )
     }
 
@@ -192,8 +192,8 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
             actual = listOf(
                 Uninitialized,
                 Loading(),
-                Fail(MockException),
-            ),
+                Fail(MockException)
+            )
         )
     }
 
@@ -213,8 +213,8 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
             actual = listOf(
                 Uninitialized,
                 Loading(),
-                Success("some text"),
-            ),
+                Success("some text")
+            )
         )
     }
 
@@ -234,8 +234,8 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
             actual = listOf(
                 Uninitialized,
                 Loading(),
-                Fail(MockException),
-            ),
+                Fail(MockException)
+            )
         )
     }
 }

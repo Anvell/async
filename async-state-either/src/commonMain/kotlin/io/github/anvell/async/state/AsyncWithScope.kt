@@ -14,5 +14,5 @@ import kotlin.coroutines.EmptyCoroutineContext
 fun <T> CoroutineScope.asyncWithScope(
     context: CoroutineContext = EmptyCoroutineContext,
     start: CoroutineStart = CoroutineStart.DEFAULT,
-    block: suspend CoroutineScope.() -> T,
+    block: suspend CoroutineScope.() -> T
 ) = this to async(context, start, block)
