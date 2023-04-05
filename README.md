@@ -36,7 +36,7 @@ and:
 
 ```gradle
 dependencies {
-    implementation 'com.github.anvell:async:0.2.1'
+    implementation 'com.github.anvell:async:1.1.2'
 }
 ```
 

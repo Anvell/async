@@ -4,6 +4,8 @@ import io.github.anvell.async.Async
 import io.github.anvell.async.Fail
 import io.github.anvell.async.Loading
 import io.github.anvell.async.Success
+import io.github.anvell.either.Either
+import io.github.anvell.either.fold
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -71,21 +73,21 @@ interface AsyncState<S> {
     }
 
     /**
-     * Collect flow of values wrapped in `Result` and update state with [reducer].
+     * Collect flow of values wrapped in `Either` and update state with [reducer].
      */
-    fun <V> Flow<Result<V>>.collectReduceAsState(
+    fun <L, R> Flow<Either<L, R>>.collectReduceAsState(
         scope: CoroutineScope,
-        initialState: Async<V>? = Loading(),
-        reducer: S.(Async<V>) -> S
-    ) = scope.launch {
+        initialState: Async<R>? = Loading(),
+        reducer: S.(Async<R>) -> S
+    ) where L : Throwable = scope.launch {
         if (initialState != null) {
             setState { reducer(initialState) }
         }
         catch { setState { reducer(Fail(it)) } }
             .collect {
                 it.fold(
-                    onFailure = { setState { reducer(Fail(it)) } },
-                    onSuccess = { setState { reducer(Success(it)) } }
+                    left = { setState { reducer(Fail(it)) } },
+                    right = { setState { reducer(Success(it)) } }
                 )
             }
     }
@@ -106,19 +108,19 @@ interface AsyncState<S> {
     }
 
     /**
-     * Await [result][Result] and update state with [reducer].
+     * Await [either][Either] and update state with [reducer].
      */
-    fun <V> ScopedDeferred<Result<V>>.reduceAsState(
-        initialState: Async<V>? = Loading(),
-        reducer: S.(Async<V>) -> S
-    ) = let { (scope, value) ->
+    fun <L, R> ScopedDeferred<Either<L, R>>.reduceAsState(
+        initialState: Async<R>? = Loading(),
+        reducer: S.(Async<R>) -> S
+    ) where L : Throwable = let { (scope, value) ->
         scope.launch {
             if (initialState != null) {
                 setState { reducer(initialState) }
             }
             value.await().fold(
-                onFailure = { setState { reducer(Fail(it)) } },
-                onSuccess = { setState { reducer(Success(it)) } }
+                left = { setState { reducer(Fail(it)) } },
+                right = { setState { reducer(Success(it)) } }
             )
         }
     }

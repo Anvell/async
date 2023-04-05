@@ -7,6 +7,9 @@ import io.github.anvell.async.Success
 import io.github.anvell.async.Uninitialized
 import io.github.anvell.async.state.mock.MockData
 import io.github.anvell.async.state.mock.MockException
+import io.github.anvell.either.Either
+import io.github.anvell.either.Left
+import io.github.anvell.either.Right
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
@@ -91,14 +94,14 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
     }
 
     @Test
-    fun collectFlowWithResultsAsState() = runTest {
-        val flow = flow {
+    fun collectFlowWithEitherAsState() = runTest {
+        val flow: Flow<Either<MockException, String>> = flow {
             delay(1)
-            emit(Result.success("foo"))
+            emit(Right("foo"))
             delay(1)
-            emit(Result.failure(MockException))
+            emit(Left(MockException))
             delay(1)
-            emit(Result.success("bar"))
+            emit(Right("bar"))
         }
 
         val received = mutableListOf<Async<String>>()
@@ -158,7 +161,7 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
         val selectSubscribe = selectSubscribe(MockData::text, received::add)
         val asyncScoped = asyncWithScope {
             delay(1)
-            Result.success("some text")
+            Right("some text")
         }.reduceAsState { copy(text = it) }
         asyncScoped.join()
         selectSubscribe.cancel()
@@ -177,9 +180,9 @@ class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
     fun reducingErrorValueAsState() = runTest {
         val received = mutableListOf<Async<String>>()
         val selectSubscribe = selectSubscribe(MockData::text, received::add)
-        val asyncScoped = asyncWithScope<Result<String>> {
+        val asyncScoped = asyncWithScope {
             delay(1)
-            Result.failure(MockException)
+            Left(MockException)
         }.reduceAsState { copy(text = it) }
         asyncScoped.join()
         selectSubscribe.cancel()
