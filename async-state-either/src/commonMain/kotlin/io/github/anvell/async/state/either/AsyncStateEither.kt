@@ -1,30 +1,27 @@
-package io.github.anvell.async.state
+package io.github.anvell.async.state.either
 
 import io.github.anvell.async.Async
 import io.github.anvell.async.Fail
 import io.github.anvell.async.Loading
 import io.github.anvell.async.Success
+import io.github.anvell.async.state.ScopedDeferred
 import io.github.anvell.either.Either
 import io.github.anvell.either.fold
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlin.reflect.KProperty1
 
 /**
  * Set of operators for UDF state management based on [Async].
  */
-public interface AsyncState<S> {
+public interface AsyncStateEither<S> {
 
     /**
-     * Delegate implementation of [AsyncState] based on [MutableStateFlow].
+     * Delegate implementation of [AsyncStateEither] based on [MutableStateFlow].
      */
-    public class Delegate<S>(initialState: S) : AsyncState<S> {
+    public class Delegate<S>(initialState: S) : AsyncStateEither<S> {
         override val stateFlow: MutableStateFlow<S> = MutableStateFlow(initialState)
     }
 

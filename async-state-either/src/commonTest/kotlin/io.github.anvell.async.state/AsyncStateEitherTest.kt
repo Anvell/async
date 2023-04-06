@@ -5,6 +5,7 @@ import io.github.anvell.async.Fail
 import io.github.anvell.async.Loading
 import io.github.anvell.async.Success
 import io.github.anvell.async.Uninitialized
+import io.github.anvell.async.state.either.AsyncStateEither
 import io.github.anvell.async.state.mock.MockData
 import io.github.anvell.async.state.mock.MockException
 import io.github.anvell.either.Either
@@ -21,7 +22,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class AsyncStateTest : AsyncState<MockData> by AsyncState.Delegate(MockData()) {
+class AsyncStateEitherTest : AsyncStateEither<MockData> by AsyncStateEither.Delegate(MockData()) {
 
     @BeforeTest
     fun setUp() {

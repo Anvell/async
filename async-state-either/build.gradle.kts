@@ -31,6 +31,7 @@ kotlin {
         getByName("commonMain") {
             dependencies {
                 api(project(":async"))
+                api(project(":async-state"))
 
                 implementation(libs.coroutines.core)
                 implementation(libs.either)
